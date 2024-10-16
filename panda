@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+int checkArguments(int numOfArguments, char **cmdLineArguments);
+int printFileNames(int numberOfFiles, char **fileNames);
+int checkFileExists(const char *fileName);
+int readFile(const char *fileName);
+int extractSample(const char *fileName);
+
+//This is the main and all of the functions using the names listed in the assignment 
+//The if statements makes sure that the files exist 
+//The functions will open, read, and close the files according to the statements 
+int main(int argc, char **argv) {
+    
+    if (checkArguments(argc, argv) == 0) {
+        return 1; 
+    }
+
+   
+    printFileNames(argc, argv);
+
+   
+    if (checkFileExists(argv[1]) == 1) {
+        printf("File Exists: True\n");
+    } else {
+        printf("File Exists: False\n");
+    }
+
+    readFile(argv[2]);
+    
+    extractSample(argv[3]);
+
+    return 0;
+}
+
+int checkArguments(int numOfArguments, char **cmdLineArguments) {
+    int isAllGood = (numOfArguments >= 4) ? 1 : 0;
+    printf("Arguments: [%s]\n", isAllGood ? "True" : "False");
+    return isAllGood; 
+}
+
+int printFileNames(int numberOfFiles, char **fileNames) {
+    for (int i = 0; i < numberOfFiles; i++) {
+        printf("File Name: [%s]\n", fileNames[i]);
+    }
+    return 2; 
+}
+
+int checkFileExists(const char *fileName) {
+    FILE *dataB = fopen(fileName, "r");
+    int exists = (dataB != NULL);
+    if (dataB) fclose(dataB); 
+    return exists; // Return 1 if exists, 0 if not
+}
+
+int readFile(const char *fileName) {
+//This will open and read the file
+    FILE *data = fopen(fileName, "r");
+    if (!data) {
+        printf("Could not open file: [%s]\n", fileName);
+        return 4; 
+    }
+
+    char line[256];
+    while (fgets(line, sizeof(line), data)) {
+        printf("Name: [%s]", line);
+    }
+    fclose(data); // This is going to close the file 
+    return 3; 
+}
+
+int extractSample(const char *fileName) {
+    FILE *data2 = fopen(fileName, "r");
+    if (!data2) {
+        printf("Could not open file: [%s]\n", fileName);
+        return 4; 
+    }
+
+    char line[256];
+    int lineCount = 0;
+    while (fgets(line, sizeof(line), data2)) {
+        if (strlen(line) >= 6) {
+            lineCount++;
+            printf("Sample %d: [%s]", lineCount, line);
+        }
+    }
+    fclose(data2); 
+    return 4; 
+}
