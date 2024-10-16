@@ -52,7 +52,7 @@ int printFileNames(int numberOfFiles, char **fileNames)
 int checkFileExists(const char *fileName)
 {
     FILE *dataB = fopen(fileName, "r");
-    int exists = (dataB != NULL);
+    int exists = (dataB != \0);//attempting to use the new NULL character you showed us
     if (dataB) fclose(dataB); 
     return exists; 
 }
@@ -82,7 +82,7 @@ int extractSample(const char *fileName)
         return 4; //4 difficulty scale 
     }
 
-    char line[256];
+    char line[128];
     int lineCount = 0;
     while (fgets(line, sizeof(line), data2)) {
         if (strlen(line) >= 6) {
